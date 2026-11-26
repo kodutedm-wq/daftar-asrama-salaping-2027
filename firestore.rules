@@ -1,0 +1,286 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        request.auth.token.email == 'kodutedm@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidApplication(data) {
+      return data.keys().hasAll([
+          'id', 'applicantUid', 'applicantEmail', 'nama', 'kp', 'jantina', 'tkt',
+          'penjaga', 'tel', 'jarak', 'alamat', 'sebab', 'fail', 'failMimeType',
+          'failSize', 'hasCloudPreview', 'status', 'tarikh', 'catatanWarden',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'applicantUid', 'applicantEmail', 'nama', 'kp', 'jantina', 'tkt',
+          'penjaga', 'tel', 'jarak', 'alamat', 'sebab', 'fail', 'failMimeType',
+          'failSize', 'hasCloudPreview', 'status', 'tarikh', 'catatanWarden',
+          'dorm', 'fotoDataUrl', 'createdAt', 'updatedAt'
+        ])
+        && isValidId(data.id)
+        && data.id.size() >= 2 && data.id.size() <= 32
+        && data.applicantUid is string && data.applicantUid.size() >= 1 && data.applicantUid.size() <= 128
+        && data.applicantEmail is string && data.applicantEmail.size() <= 200
+        && data.nama is string && data.nama.size() >= 2 && data.nama.size() <= 150
+        && data.kp is string && data.kp.size() >= 12 && data.kp.size() <= 20 && data.kp.matches('^\\d{6}-?\\d{2}-?\\d{4}$')
+        && data.jantina is string && data.jantina in ['L', 'P']
+        && data.tkt is string && data.tkt.size() >= 3 && data.tkt.size() <= 30
+        && data.penjaga is string && data.penjaga.size() >= 2 && data.penjaga.size() <= 150
+        && data.tel is string && data.tel.size() >= 7 && data.tel.size() <= 20 && data.tel.matches('^[0-9+\\- ]{7,15}$')
+        && data.jarak is string && data.jarak.size() >= 1 && data.jarak.size() <= 20
+        && data.alamat is string && data.alamat.size() <= 500
+        && data.sebab is string && data.sebab.size() <= 1000
+        && data.fail is string && data.fail.size() >= 1 && data.fail.size() <= 200
+        && data.failMimeType is string && data.failMimeType.size() <= 100
+        && data.failSize is number && data.failSize >= 0 && data.failSize <= 5242880
+        && data.hasCloudPreview is bool
+        && data.status is string && data.status in ['Dihantar', 'Disemak', 'Diluluskan', 'Ditolak']
+        && data.tarikh is string && data.tarikh.size() >= 8 && data.tarikh.size() <= 20
+        && data.catatanWarden is string && data.catatanWarden.size() <= 500
+        && (!('dorm' in data) || (data.dorm is string && data.dorm.size() <= 30))
+        && (!('fotoDataUrl' in data) || (data.fotoDataUrl is string && data.fotoDataUrl.size() <= 220000))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidApplicationStatus(data) {
+      return data.keys().hasAll([
+          'id', 'applicantUid', 'tkt', 'status', 'tarikh', 'hasHealthForm',
+          'catatanWarden', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'applicantUid', 'tkt', 'status', 'tarikh', 'hasHealthForm',
+          'catatanWarden', 'dorm', 'asrama', 'createdAt', 'updatedAt'
+        ])
+        && isValidId(data.id)
+        && data.id.size() >= 2 && data.id.size() <= 32
+        && data.applicantUid is string && data.applicantUid.size() >= 1 && data.applicantUid.size() <= 128
+        && data.tkt is string && data.tkt.size() >= 3 && data.tkt.size() <= 30
+        && data.status is string && data.status in ['Dihantar', 'Disemak', 'Diluluskan', 'Ditolak']
+        && data.tarikh is string && data.tarikh.size() >= 8 && data.tarikh.size() <= 20
+        && data.hasHealthForm is bool
+        && data.catatanWarden is string && data.catatanWarden.size() <= 500
+        && (!('dorm' in data) || (data.dorm is string && data.dorm.size() <= 30))
+        && (!('asrama' in data) || (data.asrama is string && data.asrama in ['Aspura', 'Aspuri']))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidKpIndex(data) {
+      return data.keys().hasAll(['refId', 'applicantUid', 'createdAt'])
+        && data.keys().hasOnly(['refId', 'applicantUid', 'createdAt'])
+        && isValidId(data.refId)
+        && data.refId.size() >= 2 && data.refId.size() <= 32
+        && data.applicantUid is string && data.applicantUid.size() >= 1 && data.applicantUid.size() <= 128
+        && data.createdAt is timestamp;
+    }
+
+    function isValidApplicationFile(data) {
+      return data.keys().hasAll([
+          'applicationId', 'applicantUid', 'fileName', 'mimeType', 'sizeBytes', 'dataUrl', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'applicationId', 'applicantUid', 'fileName', 'mimeType', 'sizeBytes', 'dataUrl', 'createdAt'
+        ])
+        && isValidId(data.applicationId)
+        && data.applicationId.size() >= 2 && data.applicationId.size() <= 32
+        && data.applicantUid is string && data.applicantUid.size() >= 1 && data.applicantUid.size() <= 128
+        && data.fileName is string && data.fileName.size() >= 1 && data.fileName.size() <= 200
+        && data.mimeType is string && data.mimeType.size() >= 1 && data.mimeType.size() <= 100
+        && data.sizeBytes is number && data.sizeBytes >= 0 && data.sizeBytes <= 5242880
+        && data.dataUrl is string && data.dataUrl.size() >= 1 && data.dataUrl.size() <= 450000
+        && data.createdAt is timestamp;
+    }
+
+    function isValidAdminRecord(data) {
+      return data.keys().hasAll(['uid', 'email', 'nama', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'email', 'nama', 'createdAt'])
+        && isValidId(data.uid)
+        && data.email is string && data.email.size() <= 200
+        && data.nama is string && data.nama.size() <= 150
+        && data.createdAt is timestamp;
+    }
+
+    // Private PII collection: only owner or admin can read/list
+    match /applications/{applicationId} {
+      allow get: if isSignedIn() && isValidId(applicationId) && (
+        isOwner(existing().applicantUid) || isAdmin()
+      );
+      allow list: if isAdmin() || (isSignedIn() && resource.data.applicantUid == request.auth.uid);
+
+      allow create: if isVerifiedUser()
+        && isValidId(applicationId)
+        && isValidApplication(incoming())
+        && incoming().id == applicationId
+        && incoming().applicantUid == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && (isAdmin() || (incoming().status == 'Dihantar' && incoming().catatanWarden == '' && (!('dorm' in incoming()) || incoming().dorm == '')))
+        && existsAfter(/databases/$(database)/documents/applicationStatuses/$(applicationId));
+
+      allow update: if isVerifiedUser()
+        && isValidId(applicationId)
+        && isValidApplication(incoming())
+        && incoming().id == existing().id
+        && incoming().applicantUid == existing().applicantUid
+        && incoming().applicantEmail == existing().applicantEmail
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'catatanWarden', 'dorm', 'updatedAt'])) ||
+          (
+            isOwner(existing().applicantUid)
+            && existing().status == 'Dihantar'
+            && incoming().status == existing().status
+            && incoming().catatanWarden == existing().catatanWarden
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'nama', 'kp', 'jantina', 'tkt', 'penjaga', 'tel', 'jarak', 'alamat', 'sebab',
+              'fail', 'failMimeType', 'failSize', 'hasCloudPreview', 'fotoDataUrl', 'updatedAt'
+            ])
+          )
+        );
+
+      allow delete: if isAdmin() && isValidId(applicationId);
+    }
+
+    // Non-PII status split collection: safe single-doc get lookup
+    match /applicationStatuses/{applicationId} {
+      allow get: if isValidId(applicationId);
+      allow list: if isAdmin() || (isSignedIn() && resource.data.applicantUid == request.auth.uid);
+
+      allow create: if isVerifiedUser()
+        && isValidId(applicationId)
+        && isValidApplicationStatus(incoming())
+        && incoming().id == applicationId
+        && incoming().applicantUid == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && (isAdmin() || (incoming().status == 'Dihantar' && incoming().catatanWarden == '' && (!('dorm' in incoming()) || incoming().dorm == '')))
+        && existsAfter(/databases/$(database)/documents/applications/$(applicationId));
+
+      allow update: if isVerifiedUser()
+        && isValidId(applicationId)
+        && isValidApplicationStatus(incoming())
+        && incoming().id == existing().id
+        && incoming().applicantUid == existing().applicantUid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'catatanWarden', 'dorm', 'asrama', 'updatedAt'])) ||
+          (
+            isOwner(existing().applicantUid)
+            && existing().status == 'Dihantar'
+            && incoming().status == existing().status
+            && incoming().catatanWarden == existing().catatanWarden
+            && incoming().diff(existing()).affectedKeys().hasOnly(['tkt', 'hasHealthForm', 'updatedAt'])
+          )
+        );
+
+      allow delete: if isAdmin() && isValidId(applicationId);
+    }
+
+    // Zero-PII SHA-256 normalized IC hash index
+    match /kpIndex/{kpHash} {
+      allow get: if isValidId(kpHash) && kpHash.size() == 64;
+      allow list: if false;
+
+      allow create: if isVerifiedUser()
+        && isValidId(kpHash)
+        && kpHash.size() == 64
+        && isValidKpIndex(incoming())
+        && incoming().applicantUid == request.auth.uid
+        && incoming().createdAt == request.time
+        && existsAfter(/databases/$(database)/documents/applications/$(incoming().refId));
+
+      allow update: if isAdmin()
+        && isValidId(kpHash)
+        && kpHash.size() == 64
+        && isValidKpIndex(incoming())
+        && incoming().createdAt == existing().createdAt
+        && incoming().diff(existing()).affectedKeys().hasOnly(['refId', 'applicantUid']);
+
+      allow delete: if isAdmin() && isValidId(kpHash);
+    }
+
+    // Protected uploaded health form preview/PDF storage
+    match /applicationFiles/{applicationId} {
+      allow get: if isSignedIn() && isValidId(applicationId) && (
+        isOwner(existing().applicantUid) || isAdmin()
+      );
+      allow list: if isAdmin() || (isSignedIn() && resource.data.applicantUid == request.auth.uid);
+
+      allow create: if isVerifiedUser()
+        && isValidId(applicationId)
+        && isValidApplicationFile(incoming())
+        && incoming().applicationId == applicationId
+        && incoming().applicantUid == request.auth.uid
+        && incoming().createdAt == request.time
+        && existsAfter(/databases/$(database)/documents/applications/$(applicationId));
+
+      allow update: if isVerifiedUser()
+        && isValidId(applicationId)
+        && isValidApplicationFile(incoming())
+        && incoming().applicationId == existing().applicationId
+        && incoming().applicantUid == existing().applicantUid
+        && incoming().createdAt == existing().createdAt
+        && (isOwner(existing().applicantUid) || isAdmin())
+        && incoming().diff(existing()).affectedKeys().hasOnly(['fileName', 'mimeType', 'sizeBytes', 'dataUrl']);
+
+      allow delete: if isAdmin() && isValidId(applicationId);
+    }
+
+    // Admin registry
+    match /admins/{uid} {
+      allow get: if isSignedIn() && isValidId(uid) && (request.auth.uid == uid || isAdmin());
+      allow list: if isAdmin();
+
+      allow create: if isAdmin()
+        && isValidId(uid)
+        && isValidAdminRecord(incoming())
+        && incoming().uid == uid
+        && incoming().createdAt == request.time;
+
+      allow update: if isAdmin()
+        && isValidId(uid)
+        && isValidAdminRecord(incoming())
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().diff(existing()).affectedKeys().hasOnly(['email', 'nama']);
+
+      allow delete: if isAdmin() && isValidId(uid);
+    }
+  }
+}

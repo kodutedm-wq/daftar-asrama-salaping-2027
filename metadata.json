@@ -1,0 +1,6 @@
+{
+  "name": "Pendaftaran Asrama SMK Salaping 2027",
+  "description": "Sistem pendaftaran, semakan status permohonan dan dashboard warden untuk Asrama SMK Salaping, Kota Marudu bagi Sesi Persekolahan 2027.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

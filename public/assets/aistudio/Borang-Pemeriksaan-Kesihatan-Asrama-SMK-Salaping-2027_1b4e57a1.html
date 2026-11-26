@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borang Pemeriksaan Kesihatan Asrama - SMK Salaping 2027</title>
+<style>
+  :root{--ink:#111;--mut:#333;--line:#444;--pri:#1f6f4a;--soft:#f3f6f3}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#e8ebe7;color:var(--ink);font:9.5pt/1.18 Arial,Helvetica,sans-serif}
+  .toolbar{position:sticky;top:0;z-index:5;display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 12px;background:#fff;border-bottom:1px solid #ccd6cf}
+  .toolbar span{font-size:12px;color:#465}
+  .btn{appearance:none;border:1px solid var(--pri);background:var(--pri);color:#fff;padding:6px 12px;border-radius:6px;font:600 12px Arial,sans-serif;cursor:pointer}
+  .btn.sec{background:#fff;color:var(--pri)}
+  .page{width:210mm;min-height:297mm;margin:8px auto;background:#fff;padding:7mm 8mm 7mm;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+  header{display:grid;grid-template-columns:38px 1fr 38px;gap:6px;align-items:center;border-bottom:1.4px solid var(--pri);padding-bottom:2px;margin-bottom:2px}
+  header img{width:34px;height:34px;object-fit:contain}
+  .head{text-align:center}
+  .head .k{font-size:7.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.2px}
+  h1{margin:0;font-size:11.5pt;line-height:1.1;color:var(--pri)}
+  .head .s{font-size:9pt;font-weight:700}
+  .note{font-size:7.5pt;color:#222;margin:1px 0 2px;line-height:1.15}
+  h2{font-size:8.2pt;margin:3px 0 1px;padding:1px 4px;background:var(--soft);border-left:3px solid var(--pri);line-height:1.2}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:2px}
+  th,td{border:1px solid var(--line);padding:1.2px 2.5px;font-size:8.2pt;vertical-align:middle;overflow:hidden}
+  th{background:#fafcf9;font-weight:700;text-align:left}
+  .c{text-align:center}
+  .r{text-align:right}
+  .b{font-weight:700}
+  .box{display:inline-block;width:8px;height:8px;border:1px solid #222;vertical-align:middle;margin-right:2px}
+  .cb{display:inline-flex;align-items:center;gap:2px;margin-right:6px;white-space:nowrap}
+  .small{font-size:7.3pt;font-weight:400}
+  .sigcell{height:32px;vertical-align:bottom;padding-bottom:1px}
+  .sigline{border-top:1px solid #333;margin-top:18px;padding-top:1px;font-size:7.2pt;text-align:center;color:#222}
+  .decl{font-size:8pt;line-height:1.15;padding:2px 3px}
+  .foot{font-size:7pt;color:#444;text-align:center;margin-top:1px}
+  @page{size:A4;margin:6mm}
+  @media print{
+    html,body{background:#fff}
+    .toolbar{display:none !important}
+    .page{width:auto;min-height:0;margin:0;padding:0;box-shadow:none}
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media screen and (max-width:820px){
+    .page{width:auto;min-height:0;margin:0;box-shadow:none;padding:10px}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <span>Borang Pemeriksaan Kesihatan Asrama · SMK Salaping 2027 (1 muka surat A4)</span>
+  <div>
+    <button class="btn sec" type="button" onclick="window.close()">Tutup</button>
+    <button class="btn" type="button" onclick="window.print()">Cetak / Simpan PDF</button>
+  </div>
+</div>
+
+<div class="page">
+  <header>
+    <img src="logo.png" alt="Logo SMK Salaping" onerror="this.style.visibility='hidden'">
+    <div class="head">
+      <div class="k">SMK Salaping, Kota Marudu, Sabah</div>
+      <h1>BORANG PEMERIKSAAN KESIHATAN PEMOHON ASRAMA</h1>
+      <div class="s">Sesi Persekolahan 2027</div>
+    </div>
+    <div></div>
+  </header>
+
+  <div class="note"><b>Arahan:</b> Bahagian A, B &amp; E diisi oleh pemohon/ibu bapa/penjaga. Bahagian C &amp; D diisi dan disahkan oleh pegawai perubatan (klinik/hospital kerajaan atau swasta berdaftar). Sertakan borang lengkap bersama permohonan asrama.</div>
+
+  <h2>BAHAGIAN A: MAKLUMAT PEMOHON</h2>
+  <table>
+    <colgroup><col style="width:18%"><col style="width:32%"><col style="width:14%"><col style="width:16%"><col style="width:20%"></colgroup>
+    <tr><th>Nama penuh pelajar</th><td colspan="2"></td><th>No. Kad Pengenalan</th><td></td></tr>
+    <tr><th>Jantina / Tingkatan 2027</th><td><span class="cb"><span class="box"></span>L</span><span class="cb"><span class="box"></span>P</span> &nbsp; Tkt: ________</td><th>Tarikh lahir / Umur</th><td colspan="2"></td></tr>
+    <tr><th>Nama ibu bapa/penjaga</th><td></td><th>Hubungan</th><td></td><th style="width:10%">Tel. penjaga</th></tr>
+    <tr><th>Tel. pelajar</th><td></td><th>Jarak ke sekolah (km)</th><td colspan="2"></td></tr>
+    <tr><th>Alamat tempat tinggal</th><td colspan="4"></td></tr>
+  </table>
+
+  <h2>BAHAGIAN B: PENGISYTIHARAN SEJARAH KESIHATAN <span class="small">(Tandakan ✓ pada "Ya" dan nyatakan butiran jika berkaitan)</span></h2>
+  <table>
+    <colgroup><col style="width:29%"><col style="width:4%"><col style="width:4%"><col style="width:29%"><col style="width:4%"><col style="width:4%"><col style="width:26%"></colgroup>
+    <tr><th>Keadaan / Penyakit</th><th class="c">Ya</th><th class="c">Tdk</th><th>Keadaan / Penyakit</th><th class="c">Ya</th><th class="c">Tdk</th><th>Butiran / Catatan</th></tr>
+    <tr><td>Asma / Lelah</td><td></td><td></td><td>Alahan makanan</td><td></td><td></td><td rowspan="7" style="vertical-align:top"></td></tr>
+    <tr><td>Sawan / Epilepsi</td><td></td><td></td><td>Alahan ubat-ubatan</td><td></td><td></td></tr>
+    <tr><td>Kencing manis (Diabetes)</td><td></td><td></td><td>Masalah penglihatan / rabun warna</td><td></td><td></td></tr>
+    <tr><td>Darah tinggi</td><td></td><td></td><td>Masalah pendengaran / pertuturan</td><td></td><td></td></tr>
+    <tr><td>Penyakit jantung</td><td></td><td></td><td>Kecacatan fizikal / status OKU</td><td></td><td></td></tr>
+    <tr><td>Penyakit buah pinggang / hati</td><td></td><td></td><td>Penyakit berjangkit / kulit kronik</td><td></td><td></td></tr>
+    <tr><td>Lain-lain penyakit / masalah kesihatan</td><td></td><td></td><td>Pernah wad / pembedahan</td><td></td><td></td></tr>
+    <tr><th>Ubat berterusan</th><td colspan="2"><span class="cb"><span class="box"></span>Tiada</span><span class="cb"><span class="box"></span>Ada</span></td><th colspan="3">Keperluan khas / diet / lain-lain</th><td></td></tr>
+  </table>
+
+  <h2>BAHAGIAN C: PEMERIKSAAN FIZIKAL <span class="small">(Diisi oleh pegawai perubatan)</span></h2>
+  <table>
+    <colgroup><col style="width:18%"><col style="width:32%"><col style="width:18%"><col style="width:32%"></colgroup>
+    <tr><th>Tarikh pemeriksaan</th><td></td><th>Nama klinik / hospital</th><td></td></tr>
+    <tr><th>Tinggi (cm) / Berat (kg)</th><td></td><th>BMI / Tekanan darah</th><td></td></tr>
+    <tr><th>Nadi / Suhu</th><td></td><th>Penglihatan (Kanan/Kiri)</th><td></td></tr>
+    <tr><th>Rabun warna / Pendengaran</th><td></td><th>Ujian lain (jika ada)</th><td></td></tr>
+    <tr><th>Pemeriksaan am &amp; penemuan</th><td colspan="3" style="height:22px;vertical-align:top"><span class="small">(jantung, paru-paru, abdomen, sistem saraf, dll.)</span></td></tr>
+    <tr><th>Diagnosis / catatan perubatan</th><td colspan="3"></td></tr>
+  </table>
+
+  <h2>BAHAGIAN D: PENGESAHAN PEGAWAI PERUBATAN</h2>
+  <table>
+    <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+    <tr>
+      <th>Keputusan</th>
+      <td>
+        <span class="cb"><span class="box"></span><b>SIHAT / SESUAI</b> tinggal di asrama</span>
+        <span class="cb"><span class="box"></span>Sesuai <b>bersyarat</b></span>
+        <span class="cb"><span class="box"></span><b>TIDAK SESUAI</b></span>
+        &nbsp; <span class="small">Syarat/catatan: ______________________________</span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="padding:0;border:none">
+        <table style="margin:0;border:none"><tr>
+          <td class="sigcell" style="width:55%;border-top:1px solid var(--line)">
+            <div class="sigline">Tandatangan &amp; Cop Rasmi Pegawai Perubatan</div>
+            <div class="small">Nama / Jawatan: ________________________________ &nbsp; No. Pendaftaran: ____________</div>
+          </td>
+          <td class="sigcell" style="width:45%;border-top:1px solid var(--line);border-left:1px solid var(--line)">
+            <div class="sigline">Tarikh &amp; No. Telefon Klinik/Hospital</div>
+            <div class="small">Tarikh: ____ / ____ / 202__ &nbsp; Tel: __________________</div>
+          </td>
+        </tr></table>
+      </td>
+    </tr>
+  </table>
+
+  <h2>BAHAGIAN E: PENGAKUAN IBU BAPA / PENJAGA</h2>
+  <table>
+    <tr><td class="decl">Saya, ________________________________ (No. K/P __________________), mengaku bahawa maklumat Bahagian A &amp; B adalah benar dan saya memberi kebenaran kepada pihak sekolah/warden SMK Salaping untuk mendapatkan rawatan perubatan kecemasan bagi anak/jagaan saya sekiranya diperlukan.</td></tr>
+    <tr>
+      <td style="padding:0;border:none">
+        <table style="margin:0;border:none"><tr>
+          <td class="sigcell" style="width:60%;border-top:1px solid var(--line)"><div class="sigline">Tandatangan Ibu Bapa / Penjaga</div></td>
+          <td class="sigcell" style="width:40%;border-top:1px solid var(--line);border-left:1px solid var(--line)"><div class="sigline">Tarikh: ____ / ____ / 202__</div></td>
+        </tr></table>
+      </td>
+    </tr>
+  </table>
+
+  <table style="margin-top:2px">
+    <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+    <tr><th>Kegunaan Pejabat/Warden</th><td class="small">No. Rujukan: ____________ &nbsp; Tarikh terima: ____/____/202__ &nbsp; Disemak oleh: ________________ &nbsp; Status: ____________</td></tr>
+  </table>
+
+  <div class="foot">Borang Pemeriksaan Kesihatan Asrama · SMK Salaping, Kota Marudu · Sesi 2027</div>
+</div>
+</body>
+</html>

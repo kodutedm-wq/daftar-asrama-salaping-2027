@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f6f4a">
+<meta name="description" content="Sistem pendaftaran, semakan status dan dashboard warden untuk Asrama SMK Salaping 2027.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Asrama 2027">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="App.ico" sizes="any">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Pendaftaran Asrama SMK Salaping 2027</title>
+<style>
+:root{
+  --bg:#f4f6f3;--card:#fff;--ink:#17251e;--mut:#5f7067;--line:#dde4dd;
+  --pri:#1f6f4a;--pri2:#15573a;--pri-ink:#fff;--soft:#e8f3ec;
+  --warn:#a76514;--warn-bg:#fdf3e2;--bad:#b4372f;--bad-bg:#fdeceb;
+  --ok:#1f6f4a;--ok-bg:#e7f4ec;--radius:14px;--shadow:0 8px 24px rgba(23,37,30,.08);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){
+  --bg:#111a15;--card:#1a2620;--ink:#e9f0eb;--mut:#9fb0a6;--line:#2d3d34;
+  --pri:#4cc38a;--pri2:#2d8f62;--pri-ink:#0b1a12;--soft:#1f3328;
+  --warn:#e0b04f;--warn-bg:#3a3020;--bad:#ef7d74;--bad-bg:#3d2422;
+  --ok:#4cc38a;--ok-bg:#1f3328;--shadow:0 8px 24px rgba(0,0,0,.3);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111a15;--card:#1a2620;--ink:#e9f0eb;--mut:#9fb0a6;--line:#2d3d34;
+  --pri:#4cc38a;--pri2:#2d8f62;--pri-ink:#0b1a12;--soft:#1f3328;
+  --warn:#e0b04f;--warn-bg:#3a3020;--bad:#ef7d74;--bad-bg:#3d2422;
+  --ok:#4cc38a;--ok-bg:#1f3328;--shadow:0 8px 24px rgba(0,0,0,.3);color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(74px + env(safe-area-inset-top,0px))}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.topbar{
+  position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(12px + env(safe-area-inset-top,0px)) 18px 12px;
+  background:linear-gradient(135deg,var(--pri),var(--pri2));color:var(--pri-ink);
+  box-shadow:0 4px 18px rgba(21,87,58,.22);
+}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand-logo{width:44px;height:44px;object-fit:contain;border-radius:10px;background:rgba(255,255,255,.92);padding:3px;flex:none}
+.brand h1{margin:0;font-size:18px;line-height:1.2;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{margin:2px 0 0;font-size:12px;opacity:.9}
+.icon-btn{
+  flex:none;width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;
+  border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:inherit;
+  font-size:19px;display:grid;place-items:center;cursor:pointer;
+}
+.icon-btn:hover{background:rgba(255,255,255,.24)}
+.tabs{
+  position:sticky;top:calc(68px + env(safe-area-inset-top,0px));z-index:25;
+  display:flex;gap:8px;max-width:1100px;margin:0 auto;padding:12px 18px 0;
+}
+.tabs a{
+  flex:1;min-height:46px;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink);text-decoration:none;font-size:14px;font-weight:600;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.tabs a:hover{border-color:var(--pri)}
+.tabs a.on{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
+.tabs .ic{font-size:17px;line-height:1}
+main{max-width:1100px;margin:0 auto;padding:14px 18px 48px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;margin-bottom:14px;box-shadow:var(--shadow);
+}
+.steps{
+  position:sticky;top:calc(126px + env(safe-area-inset-top,0px));z-index:20;
+  display:flex;gap:6px;overflow-x:auto;overscroll-behavior-x:contain;
+  padding:8px;margin-bottom:14px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);scrollbar-width:thin;
+}
+.st{
+  flex:1 0 auto;min-width:118px;min-height:44px;display:flex;align-items:center;justify-content:center;
+  text-align:center;font-size:12px;color:var(--mut);padding:7px 8px;
+  border-bottom:3px solid var(--line);border-radius:8px 8px 0 0;
+}
+.st.done{border-color:var(--ok);color:var(--ink);cursor:pointer}
+.st.cur{border-color:var(--pri);color:var(--pri);font-weight:700;background:var(--soft)}
+h2{margin:0 0 8px;font-size:18px}
+p{margin:6px 0 12px}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:12px 0 5px}
+input,select,textarea{
+  width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg);color:var(--ink);font:inherit;font-size:16px;
+}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{
+  outline:3px solid var(--soft);outline-offset:2px;border-color:var(--pri)
+}
+textarea{min-height:82px;resize:vertical}
+input[type=file]{padding:9px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:0 14px}
+.row,.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.actions{justify-content:flex-end;margin-top:0}
+button{
+  min-height:46px;padding:10px 17px;border-radius:10px;border:1px solid var(--pri);
+  background:var(--pri);color:var(--pri-ink);font:inherit;font-weight:600;cursor:pointer;
+}
+button:hover{filter:brightness(.96)}
+button.s{background:transparent;color:var(--pri)}
+button.d{background:transparent;color:var(--bad);border-color:var(--bad)}
+button.xs{min-height:36px;padding:6px 10px;font-size:13px;border-radius:8px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.chk{
+  display:flex;gap:11px;align-items:flex-start;padding:12px;border:1px solid var(--line);
+  border-radius:10px;margin-top:12px;cursor:pointer;background:var(--bg);
+}
+.chk input{width:22px;height:22px;min-height:0;margin:1px 0 0;accent-color:var(--pri);flex:none}
+.note{
+  font-size:13px;color:var(--mut);background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:11px 12px;margin-top:12px;
+}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:26px;line-height:1.1;color:var(--pri)}
+.stat span{font-size:12px;color:var(--mut)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.bar input,.bar select{width:auto;flex:1 1 180px;min-width:150px}
+.tw{overflow-x:auto;overscroll-behavior-x:contain;border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:680px}
+th,td{padding:10px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:12px;color:var(--mut);font-weight:700;background:var(--bg)}
+.b{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid transparent;white-space:nowrap}
+.b.Dihantar{color:var(--warn);background:var(--warn-bg);border-color:var(--warn)}
+.b.Disemak{color:var(--pri);background:var(--soft);border-color:var(--pri)}
+.b.Diluluskan{color:var(--ok);background:var(--ok-bg);border-color:var(--ok)}
+.b.Ditolak{color:var(--bad);background:var(--bad-bg);border-color:var(--bad)}
+footer{max-width:1100px;margin:0 auto;padding:0 18px calc(28px + env(safe-area-inset-bottom,0px));font-size:12px;color:var(--mut);text-align:center}
+#toast{
+  position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(12px);
+  max-width:min(92vw,460px);background:var(--ink);color:var(--bg);padding:11px 17px;border-radius:10px;
+  font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;
+  transition:opacity .18s,transform .18s;z-index:60;text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){
+  table,thead,tbody,tr,th,td{display:block;min-width:0}
+  table{min-width:0}
+  thead{display:none}
+  tr{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-bottom:10px}
+  td{border:0;padding:7px 2px;display:flex;justify-content:space-between;gap:12px;text-align:right;white-space:normal}
+  td:before{content:attr(data-label);flex:0 0 42%;text-align:left;color:var(--mut);font-weight:700}
+  td:last-child{border-top:1px dashed var(--line);margin-top:6px;padding-top:10px}
+}
+@media (max-width:640px){
+  .topbar{padding:calc(9px + env(safe-area-inset-top,0px)) 12px 9px}
+  .brand-logo{width:38px;height:38px}
+  .brand h1{font-size:16px}
+  .brand p{font-size:11px}
+  .icon-btn{width:42px;height:42px;min-height:42px}
+  .tabs{
+    position:fixed;top:auto;bottom:0;left:0;right:0;max-width:none;margin:0;
+    padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px));
+    background:var(--card);border-top:1px solid var(--line);box-shadow:0 -6px 22px rgba(0,0,0,.12);
+  }
+  .tabs a{flex-direction:column;gap:2px;min-height:52px;padding:5px 4px;font-size:11px;border-radius:12px}
+  .tabs .ic{font-size:18px}
+  main{padding:12px 12px 104px}
+  .card{padding:15px;border-radius:13px}
+  .steps{top:calc(62px + env(safe-area-inset-top,0px));padding:6px}
+  .st{min-width:104px;font-size:11px}
+  h2{font-size:17px}
+  .row button{flex:1 1 130px}
+  .actions{justify-content:stretch}
+  .actions button{flex:1 1 90px}
+  footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="logo.png" alt="Logo SMK Salaping" class="brand-logo">
+    <div>
+      <h1>Pendaftaran Asrama 2027</h1>
+      <p>SMK Salaping · Kota Marudu</p>
+    </div>
+  </div>
+  <button id="themeBtn" class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Tukar tema terang/gelap" title="Tukar tema">🌙</button>
+</header>
+
+<nav class="tabs" aria-label="Navigasi utama">
+  <a href="#pemohon" id="n1"><span class="ic">📝</span><span>Permohonan</span></a>
+  <a href="#semak" id="n3"><span class="ic">🔎</span><span>Semak Status</span></a>
+  <a href="#admin" id="n2"><span class="ic">📊</span><span>Dashboard Warden</span></a>
+</nav>
+
+<main id="app"></main>
+<footer>Aplikasi prototaip · Data disimpan pada peranti ini sahaja · © 2027 SMK Salaping</footer>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+var KEY="asrama27",KEYD="asrama27draft",KEYT="asrama27theme";
+var STEPS=["Muat turun borang","Lengkapkan borang","Pemeriksaan klinik","Isi permohonan","Muat naik borang","Hantar"];
+var seed=[
+  ["Aisyah binti Rahman","080512-12-0456","P","Tingkatan 1","Rahman Ali","012-3456789","18","Diluluskan"],
+  ["Muhammad Daniel","070930-12-1123","L","Tingkatan 2","Hamid Yusof","013-8801122","35","Dihantar"],
+  ["Nur Elisa","080101-12-0780","P","Tingkatan 1","Salmah Ahmad","014-2203344","12","Disemak"],
+  ["Jovian Gimbang","060715-12-0345","L","Tingkatan 4","Gimbang Lojuin","016-7712345","42","Dihantar"],
+  ["Siti Hajar","050303-12-0990","P","Tingkatan 6","Kassim Ibrahim","017-6655443","27","Ditolak"]
+];
+function ld(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("Storan penuh. Cuba gunakan saiz fail yang lebih kecil.")}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var toastTimer=null;
+function toast(m){
+  var t=document.getElementById("toast");t.textContent=m;t.className="show";
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.className=""},2600);
+}
+function applyTheme(t){
+  var root=document.documentElement;
+  if(t==="dark"||t==="light")root.setAttribute("data-theme",t);else root.removeAttribute("data-theme");
+  document.getElementById("themeBtn").textContent=t==="dark"?"☀️":"🌙";
+}
+function toggleTheme(){
+  var cur=document.documentElement.getAttribute("data-theme");
+  var next=cur==="dark"?"light":"dark";sv(KEYT,next);applyTheme(next);
+}
+applyTheme(ld(KEYT,""));
+
+var apps=ld(KEY,null);
+if(!apps||!apps.length){
+  apps=seed.map(function(s,i){return{
+    id:"A"+(101+i),nama:s[0],kp:s[1],jantina:s[2],tkt:s[3],penjaga:s[4],tel:s[5],
+    jarak:s[6],alamat:"Kota Marudu",sebab:"",fail:"borang-kesihatan.pdf",
+    status:s[7],tarikh:"2026-11-"+(10+i)
+  }});
+  sv(KEY,apps);
+}
+var d=ld(KEYD,{step:0,c:[0,0,0],f:{},file:""});
+function saveD(){sv(KEYD,d)}
+
+function route(){
+  var h=(location.hash||"").replace("#","")||"pemohon";
+  ["n1","n2","n3"].forEach(function(i){document.getElementById(i).className=""});
+  if(h==="admin"){document.getElementById("n2").className="on";admin()}
+  else if(h==="semak"){document.getElementById("n3").className="on";semak()}
+  else{document.getElementById("n1").className="on";pemohon()}
+}
+window.addEventListener("hashchange",route);
+
+function pemohon(){
+  var a=document.getElementById("app"),h='<div class="steps">';
+  STEPS.forEach(function(s,i){
+    var cls=i<d.step?"done":i===d.step?"cur":"";
+    h+='<div class="st '+cls+'"'+(i<d.step?' onclick="jump('+i+')" title="Kembali ke langkah ini"':"")+'>'+(i+1)+'. '+esc(s)+'</div>';
+  });
+  h+='</div><div class="card">';
+  var s=d.step,f=d.f;
+  if(s<=2){
+    var t=[
+      ["Muat turun borang kesihatan","Muat turun borang pemeriksaan kesihatan, kemudian cetak dan bawa ke klinik komuniti.",
+       '<div class="row"><button class="s" type="button" onclick="dl()">⬇ Muat turun borang</button></div>'],
+      ["Lengkapkan borang","Isi maklumat pelajar dan penjaga pada borang kesihatan sebelum ke klinik. Semak ejaan nama dan nombor kad pengenalan."],
+      ["Laporan kesihatan di klinik","Bawa borang ke klinik komuniti. Pastikan doktor atau pegawai perubatan mengesahkan dan mengecop borang tersebut."]
+    ][s];
+    h+='<h2>'+t[0]+'</h2><p>'+t[1]+'</p>'+(t[2]||"");
+    h+='<label class="chk"><input type="checkbox" '+(d.c[s]?"checked":"")+' onchange="d.c['+s+']=this.checked?1:0;saveD();pemohon()"> <span>Saya sudah melaksanakan langkah ini</span></label>';
+    h+='<div class="row">'+(s>0?'<button class="s" type="button" onclick="go(-1)">Kembali</button>':"")+
+       '<button type="button" '+(d.c[s]?"":"disabled")+' onclick="go(1)">Seterusnya</button></div>';
+  }
+  else if(s===3){
+    h+='<h2>Borang permohonan asrama</h2><p>Sila isi semua medan yang ditandakan. Maklumat ini boleh disimpan dan disambung semula kemudian.</p>';
+    h+='<div class="g">'+
+      inp("nama","Nama penuh pelajar","text","","name")+
+      inp("kp","No. kad pengenalan","text","000000-00-0000","off")+
+      sel("jantina","Jantina",["L","P"])+
+      sel("tkt","Tingkatan",["Tingkatan 1","Tingkatan 2","Tingkatan 3","Tingkatan 4","Tingkatan 5","Tingkatan 6"])+
+      inp("penjaga","Nama ibu bapa / penjaga","text","","off")+
+      inp("tel","No. telefon penjaga","tel","012-3456789","tel")+
+      inp("jarak","Jarak rumah ke sekolah (km)","number","0","off")
+    +'</div>';
+    h+='<label for="f_alamat">Alamat rumah</label><textarea id="f_alamat" rows="2" autocomplete="street-address" oninput="d.f.alamat=this.value;saveD()">'+esc(f.alamat)+'</textarea>';
+    h+='<label for="f_sebab">Sebab memohon asrama</label><textarea id="f_sebab" rows="2" oninput="d.f.sebab=this.value;saveD()">'+esc(f.sebab)+'</textarea>';
+    h+='<div class="row"><button class="s" type="button" onclick="go(-1)">Kembali</button><button type="button" onclick="v4()">Simpan dan teruskan</button></div>';
+  }
+  else if(s===4){
+    h+='<h2>Pengesahan kesihatan</h2><p>Muat naik imbasan atau gambar borang kesihatan yang telah disahkan klinik (PDF, JPG atau PNG, maksimum 5MB).</p>';
+    h+='<input id="fileInput" type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="up(this)">';
+    if(d.file)h+='<div class="note">✅ Fail dipilih: <b>'+esc(d.file)+'</b></div>';
+    h+='<div class="row"><button class="s" type="button" onclick="go(-1)">Kembali</button><button type="button" '+(d.file?"":"disabled")+' onclick="go(1)">Seterusnya</button></div>';
+  }
+  else{
+    h+='<h2>Semak dan hantar</h2><p>Pastikan semua maklumat adalah betul sebelum dihantar.</p><div class="tw"><table>';
+    [
+      ["Nama",f.nama],["No. KP",f.kp],["Jantina",f.jantina],["Tingkatan",f.tkt],
+      ["Penjaga",f.penjaga],["Telefon",f.tel],["Jarak",f.jarak?f.jarak+" km":""],
+      ["Borang kesihatan",d.file]
+    ].forEach(function(r){h+='<tr><td data-label="'+esc(r[0])+'">'+esc(r[1]||"—")+'</td></tr>'});
+    h+='</table></div><div class="row"><button class="s" type="button" onclick="go(-1)">Kembali</button><button type="button" onclick="hantar()">Hantar permohonan</button></div>';
+  }
+  a.innerHTML=h+'</div>';
+}
+function inp(k,l,t,p,auto){return'<div><label for="f_'+k+'">'+l+'</label><input id="f_'+k+'" type="'+(t||"text")+'"'+
+  (p?' placeholder="'+p+'"':"")+(auto?' autocomplete="'+auto+'"':"")+
+  ' value="'+esc(d.f[k])+'" oninput="d.f.'+k+'=this.value;saveD()"></div>'}
+function sel(k,l,o){return'<div><label for="f_'+k+'">'+l+'</label><select id="f_'+k+'" onchange="d.f.'+k+'=this.value;saveD()">'+
+  o.map(function(x){return'<option '+(d.f[k]===x?"selected":"")+'>'+x+'</option>'}).join("")+'</select></div>'}
+function go(n){d.step=Math.max(0,Math.min(STEPS.length-1,d.step+n));saveD();pemohon();scrollTo({top:0,behavior:"smooth"})}
+function jump(i){d.step=i;saveD();pemohon();scrollTo({top:0,behavior:"smooth"})}
+function v4(){
+  var f=d.f;
+  if(!f.jantina)f.jantina="L";if(!f.tkt)f.tkt="Tingkatan 1";
+  if(!String(f.nama||"").trim()){toast("Sila isi nama penuh pelajar.");return}
+  if(!/^\d{6}-?\d{2}-?\d{4}$/.test(f.kp||"")){toast("Format No. KP tidak sah. Contoh: 000000-00-0000");return}
+  if(!String(f.penjaga||"").trim()){toast("Sila isi nama ibu bapa / penjaga.");return}
+  if(!/^[0-9+\- ]{7,15}$/.test(f.tel||"")){toast("Sila isi nombor telefon yang sah.");return}
+  if(!(parseFloat(f.jarak)>0)){toast("Sila isi jarak rumah ke sekolah (km).");return}
+  go(1);
+}
+function up(el){
+  var x=el.files&&el.files[0];if(!x)return;
+  if(x.size>5*1048576){toast("Saiz fail melebihi 5MB. Sila pilih fail lain.");el.value="";return}
+  d.file=x.name;saveD();pemohon();toast("Fail berjaya dipilih.");
+}
+function nextId(){
+  var max=100;apps.forEach(function(a){var n=parseInt(String(a.id).replace(/\D/g,""),10);if(n>max)max=n});
+  return"A"+(max+1);
+}
+function hantar(){
+  var f=d.f,id=nextId();
+  apps.unshift({id:id,nama:f.nama,kp:f.kp,jantina:f.jantina,tkt:f.tkt,penjaga:f.penjaga,tel:f.tel,
+    jarak:f.jarak,alamat:f.alamat||"",sebab:f.sebab||"",fail:d.file,status:"Dihantar",
+    tarikh:new Date().toISOString().slice(0,10)});
+  sv(KEY,apps);
+  d={step:0,c:[0,0,0],f:{},file:""};saveD();
+  document.getElementById("app").innerHTML='<div class="card"><h2>✅ Permohonan dihantar</h2>'+
+    '<p>No. rujukan: <b>'+esc(id)+'</b>. Simpan nombor ini untuk menyemak status permohonan.</p>'+
+    '<div class="row"><button type="button" onclick="location.hash=\'semak\'">Semak status</button>'+
+    '<button class="s" type="button" onclick="location.hash=\'pemohon\'">Permohonan baru</button></div></div>';
+  toast("Permohonan berjaya dihantar.");
+}
+function downloadText(name,text,type,bom){
+  var parts=[bom?"\ufeff":"",text];
+  var u=URL.createObjectURL(new Blob(parts,{type:type||"text/plain;charset=utf-8"}));
+  var a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();
+  document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u)},1500);
+}
+function dl(){
+  var url="Borang-Pemeriksaan-Kesihatan-Asrama-SMK-Salaping-2027.html";
+  try{
+    var w=window.open(url,"_blank");
+    if(!w){
+      var a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+    }
+    toast("Borang kesihatan dibuka. Gunakan butang Cetak/Simpan PDF pada borang.");
+  }catch(e){
+    toast("Borang tidak dapat dibuka. Sila buka fail borang dalam folder aplikasi.");
+  }
+}
+
+function semak(){
+  document.getElementById("app").innerHTML='<div class="card"><h2>Semak status permohonan</h2>'+
+    '<p>Masukkan nombor kad pengenalan atau no. rujukan yang diberikan semasa menghantar permohonan.</p>'+
+    '<label for="q">No. kad pengenalan / no. rujukan</label>'+
+    '<input id="q" placeholder="Contoh: A101 atau 080512-12-0456" autocomplete="off" onkeydown="if(event.key===\'Enter\')cari()">'+
+    '<div class="row"><button type="button" onclick="cari()">Semak status</button></div><div id="r"></div></div>';
+}
+function cari(){
+  var el=document.getElementById("q"),q=el.value.trim().toLowerCase();
+  var m=apps.filter(function(a){return q&&(a.id.toLowerCase()===q||String(a.kp).toLowerCase()===q||String(a.kp).replace(/-/g,"")===q.replace(/-/g,""))});
+  document.getElementById("r").innerHTML=m.length?
+    '<div class="note"><b>'+esc(m[0].nama)+'</b> · '+esc(m[0].id)+'<br>Status: <span class="b '+m[0].status+'">'+esc(m[0].status)+'</span>'+
+    '<br>Tarikh hantar: '+esc(m[0].tarikh)+'</div>':
+    '<div class="note">Tiada rekod dijumpai. Sila semak semula nombor yang dimasukkan.</div>';
+}
+
+var flt={q:"",s:""};
+function admin(){
+  var c=function(s){return apps.filter(function(a){return a.status===s}).length};
+  var h='<div class="stats">'+
+    stat(apps.length,"Jumlah permohonan")+stat(c("Dihantar"),"Menunggu semakan")+
+    stat(c("Disemak"),"Disemak")+stat(c("Diluluskan"),"Diluluskan")+stat(c("Ditolak"),"Ditolak")+'</div>';
+  h+='<div class="card"><div class="bar">'+
+    '<input id="aq" placeholder="Cari nama / no. KP" value="'+esc(flt.q)+'" oninput="flt.q=this.value;tbl()">'+
+    '<select aria-label="Tapis status" onchange="flt.s=this.value;tbl()"><option value="">Semua status</option>'+
+      ["Dihantar","Disemak","Diluluskan","Ditolak"].map(function(s){return'<option '+(flt.s===s?"selected":"")+'>'+s+'</option>'}).join("")+
+    '</select>'+
+    '<button class="s" type="button" onclick="csv()">Eksport CSV</button>'+
+    '<button class="s" type="button" onclick="json()">Eksport JSON</button>'+
+    '<button class="d" type="button" onclick="clr()">Kosongkan</button>'+
+    '<button class="s" type="button" onclick="rst()">Data contoh</button>'+
+    '</div><div class="tw" id="tb"></div>'+
+    '<div class="note">Data disimpan pada pelayar/peranti ini sahaja (prototaip). Untuk kegunaan rasmi, sambungkan aplikasi ini kepada pangkalan data pusat.</div></div>';
+  document.getElementById("app").innerHTML=h;tbl();
+}
+function stat(n,l){return'<div class="stat"><b>'+n+'</b><span>'+l+'</span></div>'}
+function tbl(){
+  var q=flt.q.toLowerCase();
+  var r=apps.filter(function(a){return(!flt.s||a.status===flt.s)&&
+    (!q||String(a.nama).toLowerCase().indexOf(q)>-1||String(a.kp).indexOf(q)>-1)});
+  var head='<table><thead><tr><th>Rujukan</th><th>Nama</th><th>Tingkatan</th><th>Jarak</th><th>Borang kesihatan</th><th>Status</th><th>Tindakan</th></tr></thead><tbody>';
+  var body=r.map(function(a){
+    return'<tr>'+
+      td("Rujukan",esc(a.id))+td("Nama",esc(a.nama))+td("Tingkatan",esc(a.tkt))+
+      td("Jarak",esc(a.jarak)+" km")+td("Borang kesihatan",a.fail?"Ada":"Tiada")+
+      td("Status",'<span class="b '+esc(a.status)+'">'+esc(a.status)+'</span>')+
+      '<td data-label="Tindakan"><div class="actions">'+
+        '<button class="xs s" type="button" onclick="ust(\''+a.id+'\',\'Disemak\')">Semak</button>'+
+        '<button class="xs s" type="button" onclick="ust(\''+a.id+'\',\'Diluluskan\')">Lulus</button>'+
+        '<button class="xs d" type="button" onclick="ust(\''+a.id+'\',\'Ditolak\')">Tolak</button>'+
+      '</div></td></tr>';
+  }).join("");
+  document.getElementById("tb").innerHTML=head+(body||'<tr><td colspan="7" style="text-align:center;color:var(--mut)">Tiada rekod.</td></tr>')+'</tbody></table>';
+}
+function td(l,v){return'<td data-label="'+l+'">'+v+'</td>'}
+function ust(id,s){apps.forEach(function(a){if(a.id===id)a.status=s});sv(KEY,apps);admin();toast("Status dikemas kini.")}
+function rst(){if(confirm("Padam semua data dan pulihkan data contoh?")){localStorage.removeItem(KEY);location.reload()}}
+function clr(){if(confirm("Padam SEMUA permohonan? Tindakan ini tidak boleh dibatalkan.")){apps=[];sv(KEY,apps);admin();toast("Senarai permohonan dikosongkan.")}}
+function csv(){
+  var rows=[["Rujukan","Nama","No KP","Jantina","Tingkatan","Penjaga","Telefon","Jarak km","Alamat","Sebab","Borang","Status","Tarikh"]]
+    .concat(apps.map(function(a){return[a.id,a.nama,a.kp,a.jantina,a.tkt,a.penjaga,a.tel,a.jarak,a.alamat,a.sebab,a.fail,a.status,a.tarikh]}));
+  var t=rows.map(function(r){return r.map(function(x){return'"'+String(x==null?"":x).replace(/"/g,'""')+'"'}).join(",")}).join("\r\n");
+  downloadText("permohonan-asrama-2027.csv",t,"text/csv;charset=utf-8",true);
+  toast("CSV dieksport.");
+}
+function json(){
+  downloadText("permohonan-asrama-2027.json",JSON.stringify(apps,null,2),"application/json;charset=utf-8",false);
+  toast("JSON dieksport.");
+}
+route();
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+{
+  "entities": {
+    "HostelApplication": {
+      "title": "HostelApplication",
+      "description": "Full hostel registration record containing applicant PII, guardian contact, and health form metadata.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 2,
+          "maxLength": 32,
+          "description": "Unique reference ID such as A101"
+        },
+        "applicantUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "Firebase Auth UID of the submitting user"
+        },
+        "applicantEmail": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Verified email of the submitting user"
+        },
+        "nama": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 150,
+          "description": "Student full name"
+        },
+        "kp": {
+          "type": "string",
+          "pattern": "^\\d{6}-?\\d{2}-?\\d{4}$",
+          "minLength": 12,
+          "maxLength": 20,
+          "description": "Malaysian MyKad / IC number"
+        },
+        "jantina": {
+          "type": "string",
+          "enum": ["L", "P"],
+          "description": "Student gender"
+        },
+        "tkt": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 30,
+          "description": "Form level for 2027 session"
+        },
+        "penjaga": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 150,
+          "description": "Parent or guardian full name"
+        },
+        "tel": {
+          "type": "string",
+          "pattern": "^[0-9+\\- ]{7,15}$",
+          "minLength": 7,
+          "maxLength": 20,
+          "description": "Guardian telephone number"
+        },
+        "jarak": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "Distance from home to school in km"
+        },
+        "alamat": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Home residential address"
+        },
+        "sebab": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Reason for hostel application"
+        },
+        "fail": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Uploaded health inspection form filename"
+        },
+        "failMimeType": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "MIME type of uploaded health form"
+        },
+        "failSize": {
+          "type": "number",
+          "description": "File size in bytes"
+        },
+        "hasCloudPreview": {
+          "type": "boolean",
+          "description": "Whether a compressed preview/PDF is stored in applicationFiles"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Dihantar", "Disemak", "Diluluskan", "Ditolak"],
+          "description": "Current warden review status"
+        },
+        "tarikh": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 20,
+          "description": "Submission date YYYY-MM-DD"
+        },
+        "catatanWarden": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional warden review notes"
+        },
+        "dorm": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "Assigned hostel dormitory code (e.g. 1A-3E for Aspura, 1A-4A for Aspuri)"
+        },
+        "fotoDataUrl": {
+          "type": "string",
+          "maxLength": 220000,
+          "description": "Compressed student portrait JPEG data URL (or empty string)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update"
+        }
+      },
+      "required": [
+        "id",
+        "applicantUid",
+        "applicantEmail",
+        "nama",
+        "kp",
+        "jantina",
+        "tkt",
+        "penjaga",
+        "tel",
+        "jarak",
+        "alamat",
+        "sebab",
+        "fail",
+        "failMimeType",
+        "failSize",
+        "hasCloudPreview",
+        "status",
+        "tarikh",
+        "catatanWarden",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ApplicationStatusPublic": {
+      "title": "ApplicationStatusPublic",
+      "description": "Non-PII public status projection for safe status lookup by reference ID.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 2,
+          "maxLength": 32
+        },
+        "applicantUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "tkt": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 30
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Dihantar", "Disemak", "Diluluskan", "Ditolak"]
+        },
+        "tarikh": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 20
+        },
+        "hasHealthForm": {
+          "type": "boolean"
+        },
+        "catatanWarden": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "dorm": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "asrama": {
+          "type": "string",
+          "enum": ["Aspura", "Aspuri"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "applicantUid",
+        "tkt",
+        "status",
+        "tarikh",
+        "hasHealthForm",
+        "catatanWarden",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "KpHashIndex": {
+      "title": "KpHashIndex",
+      "description": "Zero-PII SHA-256 IC hash mapping to reference ID.",
+      "type": "object",
+      "properties": {
+        "refId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 2,
+          "maxLength": 32
+        },
+        "applicantUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["refId", "applicantUid", "createdAt"]
+    },
+    "ApplicationFile": {
+      "title": "ApplicationFile",
+      "description": "Compressed health inspection form image or small PDF attachment.",
+      "type": "object",
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 2,
+          "maxLength": 32
+        },
+        "applicantUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "fileName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "mimeType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "sizeBytes": {
+          "type": "number"
+        },
+        "dataUrl": {
+          "type": "string",
+          "maxLength": 450000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "applicationId",
+        "applicantUid",
+        "fileName",
+        "mimeType",
+        "sizeBytes",
+        "dataUrl",
+        "createdAt"
+      ]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Authorized warden/admin user entry.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "nama": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "nama", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": {"$ref": "#/entities/HostelApplication"},
+      "description": "Private applicant hostel registration records with PII."
+    },
+    "/applicationStatuses/{applicationId}": {
+      "schema": {"$ref": "#/entities/ApplicationStatusPublic"},
+      "description": "Non-PII status records for public lookup by reference ID."
+    },
+    "/kpIndex/{kpHash}": {
+      "schema": {"$ref": "#/entities/KpHashIndex"},
+      "description": "Zero-PII SHA-256 normalized IC hash index pointing to reference ID."
+    },
+    "/applicationFiles/{applicationId}": {
+      "schema": {"$ref": "#/entities/ApplicationFile"},
+      "description": "Protected uploaded health inspection form previews."
+    },
+    "/admins/{uid}": {
+      "schema": {"$ref": "#/entities/AdminRecord"},
+      "description": "Authorized wardens and hostel administrators."
+    }
+  }
+}
